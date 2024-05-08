@@ -13,8 +13,6 @@ class ResultOfOnlineMinOrMax(
 
   val minMaxResult = UInt(1.W)
   val earlyTerminate = UInt(1.W)
-  val minMaxIndex = UInt(log2Ceil(maximumNumberOfIndex).W)
-
 }
 
 class OnlineMultipleComparator(
@@ -60,26 +58,38 @@ class OnlineMultipleComparator(
 
   val delayCount = RegInit(0.U(layerCompute._2.W))
   val resultValid = WireInit(false.B)
+  val regInit = RegInit(false.B)
 
-  val regMinMaxResultVec = Reg(
-    Vec(
-      layerCompute._1,
-      new ResultOfOnlineMinOrMax(isIndexBased, maximumNumberOfIndex)
+  val regMinMaxResultVec = RegInit(
+    VecInit(
+      Seq.fill(layerCompute._1)(
+        0.U(1.W)
+      )
     )
   )
 
-  if (!isIndexBased) {
+  val regMinMaxResultETVec = RegInit(
+    VecInit(
+      Seq.fill(layerCompute._1)(
+        0.U(1.W)
+      )
+    )
+  )
 
-    when(regMinMaxResultVec(layerCompute._1 - 2).minMaxResult === 0.U) {
-      maxMinOutput := 0.U
-    }.otherwise {
-      maxMinOutput := 1.U
-    }
+  when(regInit === false.B) {
 
-  } else {
-    maxMinIndexOutput := regMinMaxResultVec(layerCompute._1 - 2).minMaxIndex
-    maxMinOutput := regMinMaxResultVec(layerCompute._1 - 2).minMaxResult
+    regInit := true.B
   }
+
+  //////////////////////////////////////////////////////////////////
+
+  when(regMinMaxResultVec(layerCompute._1 - 2) === 0.U) {
+    maxMinOutput := 0.U
+  }.otherwise {
+    maxMinOutput := 1.U
+  }
+
+  //////////////////////////////////////////////////////////////////
 
   LogInfo(debug)(
     "final max layer (result vector index): " + (layerCompute._1 - 2)
@@ -127,22 +137,9 @@ class OnlineMultipleComparator(
         //
         // Connect the outputs
         //
-        regMinMaxResultVec(i).minMaxResult := resultMaxMinOutput
+        regMinMaxResultVec(i) := resultMaxMinOutput
         var resultEarlyTerminate = resultEarlyTerminate1 | resultEarlyTerminate2
-        regMinMaxResultVec(i).earlyTerminate := resultEarlyTerminate
-
-        if (isIndexBased) {
-
-          when(
-            resultEarlyTerminate2 === true.B && resultEarlyTerminate === true.B
-          ) {
-            regMinMaxResultVec(i).minMaxIndex := (i * 2).U;
-          }.elsewhen(
-            resultEarlyTerminate1 === true.B && resultEarlyTerminate === true.B
-          ) {
-            regMinMaxResultVec(i).minMaxIndex := (i * 2 + 1).U;
-          }
-        }
+        regMinMaxResultETVec(i) := resultEarlyTerminate
 
         LogInfo(debug)(
           "connecting inputs(" + (i * 2) + ") and input(" + (i * 2 + 1) + ") to regMinMaxResultVec(" + i + ")"
@@ -170,7 +167,7 @@ class OnlineMultipleComparator(
             isMax
           )(
             io.start,
-            regMinMaxResultVec(temp - 2).minMaxResult,
+            regMinMaxResultVec(temp - 2),
             io.inputs(countOfInputs - 1),
             false.B
           )
@@ -178,24 +175,10 @@ class OnlineMultipleComparator(
           //
           // Connect the outputs
           //
-          regMinMaxResultVec(i - 1).minMaxResult := resultMaxMinOutput
+          regMinMaxResultVec(i - 1) := resultMaxMinOutput
           var resultEarlyTerminate =
             resultEarlyTerminate1 | resultEarlyTerminate2
-          regMinMaxResultVec(i - 1).earlyTerminate := resultEarlyTerminate
-
-          if (isIndexBased) {
-            when(
-              resultEarlyTerminate2 === true.B && resultEarlyTerminate === true.B
-            ) {
-              regMinMaxResultVec(i - 1).minMaxIndex := regMinMaxResultVec(
-                temp - 2
-              ).minMaxIndex;
-            }.elsewhen(
-              resultEarlyTerminate1 === true.B && resultEarlyTerminate === true.B
-            ) {
-              regMinMaxResultVec(i - 1).minMaxIndex := (countOfInputs - 1).U;
-            }
-          }
+          regMinMaxResultETVec(i - 1) := resultEarlyTerminate
 
           LogInfo(debug)(
             "connecting odd (exceptional) regMinMaxResultVec(" + (temp - 2) + ") and inputs(" + (countOfInputs - 1) + ") to regMinMaxResultVec(" + (i - 1) + ")"
@@ -213,34 +196,18 @@ class OnlineMultipleComparator(
             isMax
           )(
             io.start,
-            regMinMaxResultVec(temp).minMaxResult,
-            regMinMaxResultVec(temp + 1).minMaxResult,
+            regMinMaxResultVec(temp),
+            regMinMaxResultVec(temp + 1),
             false.B
           )
 
           //
           // Connect the outputs
           //
-          regMinMaxResultVec(i).minMaxResult := resultMaxMinOutput
+          regMinMaxResultVec(i) := resultMaxMinOutput
           var resultEarlyTerminate =
             resultEarlyTerminate1 | resultEarlyTerminate2
-          regMinMaxResultVec(i).earlyTerminate := resultEarlyTerminate
-
-          if (isIndexBased) {
-            when(
-              resultEarlyTerminate2 === true.B && resultEarlyTerminate === true.B
-            ) {
-              regMinMaxResultVec(i).minMaxIndex := regMinMaxResultVec(
-                temp
-              ).minMaxIndex;
-            }.elsewhen(
-              resultEarlyTerminate1 === true.B && resultEarlyTerminate === true.B
-            ) {
-              regMinMaxResultVec(i).minMaxIndex := regMinMaxResultVec(
-                temp + 1
-              ).minMaxIndex;
-            }
-          }
+          regMinMaxResultETVec(i) := resultEarlyTerminate
 
           LogInfo(debug)(
             "connecting regMinMaxResultVec(" + temp + ") and regMinMaxResultVec(" + (temp + 1) + ") to regMinMaxResultVec(" + i + ")"
