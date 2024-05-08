@@ -1,20 +1,24 @@
+package fuzzy
+
 import chisel3._
 import chisel3.util._
-import chiseltest._
-import org.scalatest.flatspec.AnyFlatSpec
+import chisel3.experimental.BundleLiterals._
+import chisel3.simulator.EphemeralSimulator._
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 import scala.util.control.Breaks._
 
 import fuzzy.components._
 import fuzzy.utils._
 
-class OnlineComparatorTest extends AnyFlatSpec with ChiselScalatestTester {
-  "DUT" should "pass" in {
+class OnlineComparatorTest extends AnyFreeSpec with Matchers {
+  "DUT should pass" in {
 
-    test(new OnlineComparator(DesignConsts.ENABLE_DEBUG, true)) { dut =>
+    simulate(new OnlineComparator(DesignConsts.ENABLE_DEBUG, true)) { dut =>
       //
       // First, start with module in an inactive state
       //
-      dut.io.start.poke(0.U)
+      dut.io.start.poke(false.B)
       dut.clock.step(1)
 
       //
@@ -28,7 +32,7 @@ class OnlineComparatorTest extends AnyFlatSpec with ChiselScalatestTester {
       //
       // Start the comparator
       //
-      dut.io.start.poke(1.U)
+      dut.io.start.poke(true.B)
       breakable {
 
         for (i <- 0 until log2Ceil(test1.litValue.toInt)) {
@@ -110,14 +114,14 @@ class OnlineComparatorTest extends AnyFlatSpec with ChiselScalatestTester {
       //
       // Remove the start bit again
       //
-      dut.io.start.poke(0.U)
+      dut.io.start.poke(false.B)
     }
 
-    test(new OnlineComparator(DesignConsts.ENABLE_DEBUG, false)) { dut =>
+    simulate(new OnlineComparator(DesignConsts.ENABLE_DEBUG, false)) { dut =>
       //
       // First, start with module in an inactive state
       //
-      dut.io.start.poke(0.U)
+      dut.io.start.poke(false.B)
       dut.clock.step(1)
 
       //
@@ -131,7 +135,7 @@ class OnlineComparatorTest extends AnyFlatSpec with ChiselScalatestTester {
       //
       // Start the comparator
       //
-      dut.io.start.poke(1.U)
+      dut.io.start.poke(true.B)
 
       breakable {
 
@@ -214,7 +218,7 @@ class OnlineComparatorTest extends AnyFlatSpec with ChiselScalatestTester {
       //
       // Remove the start bit again
       //
-      dut.io.start.poke(0.U)
+      dut.io.start.poke(false.B)
     }
 
   }

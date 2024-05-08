@@ -1,16 +1,18 @@
+package fuzzy
+
 import chisel3._
-import chisel3.util._
-import chiseltest._
-import org.scalatest.flatspec.AnyFlatSpec
-import scala.util.control.Breaks._
+import chisel3.experimental.BundleLiterals._
+import chisel3.simulator.EphemeralSimulator._
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 
 import fuzzy.components._
 import fuzzy.utils._
 
-class MultipleComparatorTest extends AnyFlatSpec with ChiselScalatestTester {
-  "DUT" should "pass" in {
+class MultipleComparatorTest extends AnyFreeSpec with Matchers {
+  "DUT should pass" in {
 
-    test(
+    simulate(
       new MultipleComparator(
         true, // DesignConsts.ENABLE_DEBUG
         true, // it's max
@@ -26,13 +28,13 @@ class MultipleComparatorTest extends AnyFlatSpec with ChiselScalatestTester {
       //
       // First, start with module in an inactive state
       //
-      dut.io.start.poke(0.U)
+      dut.io.start.poke(false.B)
       dut.clock.step(1)
 
       //
       // Activate the input
       //
-      dut.io.start.poke(1.U)
+      dut.io.start.poke(true.B)
 
       //
       // Add the input vector
@@ -56,13 +58,13 @@ class MultipleComparatorTest extends AnyFlatSpec with ChiselScalatestTester {
       //
       // First, start with module in an inactive state
       //
-      dut.io.start.poke(0.U)
+      dut.io.start.poke(false.B)
       dut.clock.step(1)
 
       //
       // Activate the input
       //
-      dut.io.start.poke(1.U)
+      dut.io.start.poke(true.B)
 
       //
       // Add the input vector
@@ -87,7 +89,7 @@ class MultipleComparatorTest extends AnyFlatSpec with ChiselScalatestTester {
       //
       // Remove the start bit again
       //
-      dut.io.start.poke(0.U)
+      dut.io.start.poke(false.B)
     }
   }
 }
