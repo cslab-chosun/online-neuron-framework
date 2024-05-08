@@ -68,11 +68,11 @@ object MainRegularCircuitGenerator extends App {
       new RegularNeuronComputation(
         true, // debug
         true, // isMax
-        true, // isIndexBased
+        false, // isIndexBased
         true, // leastIndexFirst
-        8, // numberLength
-        5, // countOfInputs
-        10 // maximumNumberOfIndex
+        32, // numberLength
+        64, // countOfInputs
+        10 // maximumNumberOfIndex (not used)
       ),
       firtoolOpts = Array(
         "-disable-all-randomization",
