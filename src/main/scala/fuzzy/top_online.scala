@@ -71,7 +71,7 @@ object MainOnlineCircuitGenerator extends App {
         true, // isMax
         false, // isIndexBased
         true, // leastIndexFirst
-        32, // numberLength
+        64, // numberLength
         64, // countOfInputs
         5 // maximumNumberOfIndex (not used)
       ),

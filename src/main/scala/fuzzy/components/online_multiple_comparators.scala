@@ -53,7 +53,7 @@ class OnlineMultipleComparator(
     val resultValid = Output(Bool())
   })
 
-  val maxMinOutput = WireInit(0.U(1.W))
+  val maxMinOutput = Wire(UInt(1.W))
   val maxMinIndexOutput = WireInit(0.U(log2Ceil(maximumNumberOfIndex).W))
 
   var layerCompute = LayerCompute.Compute(debug)(countOfInputs)
@@ -69,7 +69,12 @@ class OnlineMultipleComparator(
   )
 
   if (!isIndexBased) {
-    maxMinOutput := regMinMaxResultVec(layerCompute._1 - 2).minMaxResult
+
+    when(regMinMaxResultVec(layerCompute._1 - 2).minMaxResult === 0.U) {
+      maxMinOutput := 0.U
+    }.otherwise {
+      maxMinOutput := 1.U
+    }
 
   } else {
     maxMinIndexOutput := regMinMaxResultVec(layerCompute._1 - 2).minMaxIndex
