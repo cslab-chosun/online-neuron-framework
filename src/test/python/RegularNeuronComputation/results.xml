@@ -1,6 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1715152828" />
-    <testcase name="RegularNeuronComputation_test" classname="test_RegularNeuronComputation" file="/home/sina/HyperDbg/online-neuron-framework/src/test/python/RegularNeuronComputation/test_RegularNeuronComputation.py" lineno="79" time="0.04589581489562988" sim_time_ns="10510.001" ratio_time="228996.93629801404" />
-  </testsuite>
-</testsuites>
