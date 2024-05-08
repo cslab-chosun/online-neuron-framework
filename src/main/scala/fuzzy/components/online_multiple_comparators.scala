@@ -7,8 +7,7 @@ import fuzzy.components._
 import fuzzy.utils._
 
 class ResultOfOnlineMinOrMax(
-    isIndexBased: Boolean =
-      false, // by should we return index of maximum value element or the value
+    isIndexBased: Boolean = false, // by should we return index of maximum value element or the value
     maximumNumberOfIndex: Int = DesignConsts.NUMBER_LENGTH
 ) extends Bundle {
 
@@ -21,10 +20,8 @@ class ResultOfOnlineMinOrMax(
 class OnlineMultipleComparator(
     debug: Boolean = DesignConsts.ENABLE_DEBUG,
     isMax: Boolean = true, // by default MAX Comparator
-    isIndexBased: Boolean =
-      true, // by should we return index of maximum value element or the value
-    leastIndexFirst: Boolean =
-      true, // by deafult least index is shown first (in case of equal operands)
+    isIndexBased: Boolean = true, // by should we return index of maximum value element or the value
+    leastIndexFirst: Boolean = true, // by deafult least index is shown first (in case of equal operands)
     countOfInputs: Int = 0,
     maximumNumberOfIndex: Int = 10 // in case if isIndexBased == TRUE
     // (This shows the maximum number that is possible for an index to be)
@@ -102,9 +99,7 @@ class OnlineMultipleComparator(
 
     for (i <- 0 until layerCompute._1) {
 
-      if (
-        (layerCompute._3 == false && countOfInputs / 2 > i) || (layerCompute._3 == true && (countOfInputs - 1) / 2 > i)
-      ) {
+      if ((layerCompute._3 == false && countOfInputs / 2 > i) || (layerCompute._3 == true && (countOfInputs - 1) / 2 > i)) {
 
         //
         // Connect inputs
@@ -121,7 +116,7 @@ class OnlineMultipleComparator(
           io.start,
           io.inputs(i * 2),
           io.inputs(i * 2 + 1),
-          false.B /////////////////////// This is the early termination (should be fixed)
+          false.B
         )
 
         //
@@ -172,7 +167,7 @@ class OnlineMultipleComparator(
             io.start,
             regMinMaxResultVec(temp - 2).minMaxResult,
             io.inputs(countOfInputs - 1),
-            false.B /////////////////////// This is the early termination (should be fixed)
+            false.B
           )
 
           //
@@ -215,7 +210,7 @@ class OnlineMultipleComparator(
             io.start,
             regMinMaxResultVec(temp).minMaxResult,
             regMinMaxResultVec(temp + 1).minMaxResult,
-            false.B /////////////////////// This is the early termination (should be fixed)
+            false.B
           )
 
           //
@@ -277,17 +272,15 @@ object OnlineMultipleComparator {
   def apply(
       debug: Boolean = DesignConsts.ENABLE_DEBUG,
       isMax: Boolean = true, // by default MAX Comparator
-      isIndexBased: Boolean =
-        false, // by should we return index of maximum value element or the value
-      leastIndexFirst: Boolean =
-        true, // by deafult least index is shown first (in case of equal operands)
+      isIndexBased: Boolean = false, // by should we return index of maximum value element or the value
+      leastIndexFirst: Boolean = true, // by deafult least index is shown first (in case of equal operands)
       countOfInputs: Int = 0,
       maximumNumberOfIndex: Int = 10 // in case if isIndexBased == TRUE
       // (This shows the maximum number that is possible for an index to be)
   )(
       start: Bool,
       inputs: Vec[UInt]
-  ): UInt = {
+  ): (UInt, Bool) = {
 
     val comparatorModule = Module(
       new OnlineMultipleComparator(
@@ -301,6 +294,7 @@ object OnlineMultipleComparator {
     )
 
     val result = Wire(UInt(1.W))
+    val resultValid = Wire(Bool())
 
     //
     // Configure the input signals
@@ -309,10 +303,11 @@ object OnlineMultipleComparator {
     comparatorModule.io.inputs := inputs
 
     result := comparatorModule.io.result
+    resultValid := comparatorModule.io.resultValid
 
     //
     // Return the output result
     //
-    result
+    (result, resultValid)
   }
 }

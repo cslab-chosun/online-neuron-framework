@@ -6,8 +6,7 @@ import chisel3.util._
 import fuzzy.utils._
 
 class ResultOfMinOrMax(
-    isIndexBased: Boolean =
-      false, // by should we return index of maximum value element or the value
+    isIndexBased: Boolean = false, // by should we return index of maximum value element or the value
     numberLength: Int = DesignConsts.NUMBER_LENGTH,
     maximumNumberOfIndex: Int = DesignConsts.NUMBER_LENGTH
 ) extends Bundle {
@@ -75,10 +74,8 @@ object LayerCompute {
 class MultipleComparator(
     debug: Boolean = DesignConsts.ENABLE_DEBUG,
     isMax: Boolean = true, // by default MAX Comparator
-    isIndexBased: Boolean =
-      false, // by should we return index of maximum value element or the value
-    leastIndexFirst: Boolean =
-      true, // by deafult least index is shown first (in case of equal operands)
+    isIndexBased: Boolean = false, // by should we return index of maximum value element or the value
+    leastIndexFirst: Boolean = true, // by deafult least index is shown first (in case of equal operands)
     numberLength: Int = DesignConsts.NUMBER_LENGTH,
     countOfInputs: Int = 0,
     maximumNumberOfIndex: Int = 10 // in case if isIndexBased == TRUE
@@ -153,9 +150,7 @@ class MultipleComparator(
 
     for (i <- 0 until layerCompute._1) {
 
-      if (
-        (layerCompute._3 == false && countOfInputs / 2 > i) || (layerCompute._3 == true && (countOfInputs - 1) / 2 > i)
-      ) {
+      if ((layerCompute._3 == false && countOfInputs / 2 > i) || (layerCompute._3 == true && (countOfInputs - 1) / 2 > i)) {
 
         //
         // Connect inputs
@@ -306,10 +301,8 @@ object MultipleComparator {
   def apply(
       debug: Boolean = DesignConsts.ENABLE_DEBUG,
       isMax: Boolean = true, // by default MAX Comparator
-      isIndexBased: Boolean =
-        false, // by should we return index of maximum value element or the value
-      leastIndexFirst: Boolean =
-        true, // by deafult least index is shown first (in case of equal operands)
+      isIndexBased: Boolean = false, // by should we return index of maximum value element or the value
+      leastIndexFirst: Boolean = true, // by deafult least index is shown first (in case of equal operands)
       numberLength: Int = DesignConsts.NUMBER_LENGTH,
       countOfInputs: Int = 0,
       maximumNumberOfIndex: Int = 10 // in case if isIndexBased == TRUE
