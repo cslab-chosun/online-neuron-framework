@@ -43,10 +43,18 @@ class AdditionBasedRegularNeuronComputation(
     )
 
   //
-  // Connect output pins
+  // Connect output pins ()
   //
-  io.result := result
   io.resultValid := resultValid
+
+  //
+  // Apply ReLU (rectified linear unit) logic
+  //
+  when(result >= 0.S) {
+    io.result := result
+  }.otherwise {
+    io.result := 0.S
+  }
 
 }
 
