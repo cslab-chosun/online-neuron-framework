@@ -6,7 +6,7 @@ import chisel3.simulator.EphemeralSimulator._
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 
-import funeuronzzy.components._
+import neuron.components._
 import neuron.utils._
 
 class MultipleComparatorTest extends AnyFreeSpec with Matchers {

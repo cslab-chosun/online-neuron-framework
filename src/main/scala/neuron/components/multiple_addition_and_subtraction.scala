@@ -9,7 +9,7 @@ class ResultOfAdditionSubtraction(
     numberLength: Int = DesignConsts.NUMBER_LENGTH
 ) extends Bundle {
 
-  val additionSubtractionResult = UInt(numberLength.W)
+  val additionSubtractionResult = SInt(numberLength.W)
 
 }
 
@@ -91,20 +91,20 @@ class MultipleAdditionSubtraction(
     //
     val start = Input(Bool())
 
-    val inputs = Input(Vec(countOfInputs, UInt(numberLength.W)))
+    val inputs = Input(Vec(countOfInputs, SInt(numberLength.W)))
 
     //
     // Output signals
     //
-    val result = Output(UInt((numberLength + log2Ceil(countOfInputs)).W))
+    val result = Output(SInt((numberLength + log2Ceil(countOfInputs)).W))
     val resultValid = Output(Bool())
   })
 
-  val resultOutput = WireInit(0.U((numberLength + log2Ceil(countOfInputs)).W))
+  val resultOutput = WireInit(0.S((numberLength + log2Ceil(countOfInputs)).W))
 
   var layerCompute = ReductionLayerCompute.Compute(debug)(countOfInputs)
 
-  val delayCount = RegInit(0.U(layerCompute._2.W))
+  val delayCount = RegInit(0.S(layerCompute._2.W))
   val resultValid = WireInit(false.B)
 
   val regResultVec = Reg(
@@ -128,10 +128,10 @@ class MultipleAdditionSubtraction(
     //
     // Compute delay for validity of input
     //
-    when(delayCount === layerCompute._2.U) {
+    when(delayCount === layerCompute._2.S) {
       resultValid := true.B
     }.otherwise {
-      delayCount := delayCount + 1.U
+      delayCount := delayCount + 1.S
     }
 
     //
@@ -212,8 +212,8 @@ class MultipleAdditionSubtraction(
     //
     // Reset the multiple adders/subtractors
     //
-    delayCount := 0.U
-    resultOutput := 0.U
+    delayCount := 0.S
+    resultOutput := 0.S
     resultValid := false.B
   }
 
@@ -234,8 +234,8 @@ object MultipleAdditionSubtraction {
       countOfInputs: Int = 0
   )(
       start: Bool,
-      inputs: Vec[UInt]
-  ): (UInt, Bool) = {
+      inputs: Vec[SInt]
+  ): (SInt, Bool) = {
 
     val multipleAdditionSubtractionModule = Module(
       new MultipleAdditionSubtraction(
@@ -246,7 +246,7 @@ object MultipleAdditionSubtraction {
       )
     )
 
-    val result = Wire(UInt((numberLength + log2Ceil(countOfInputs)).W))
+    val result = Wire(SInt((numberLength + log2Ceil(countOfInputs)).W))
     val resultValid = Wire(Bool())
 
     //

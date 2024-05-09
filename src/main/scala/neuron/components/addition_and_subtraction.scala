@@ -18,16 +18,16 @@ class AdditionAndSubtraction(
     //
     val start = Input(Bool())
 
-    val in1 = Input(UInt(numberLength.W))
-    val in2 = Input(UInt(numberLength.W))
+    val in1 = Input(SInt(numberLength.W))
+    val in2 = Input(SInt(numberLength.W))
 
     //
     // Output signals
     //
-    val result = Output(UInt((numberLength + 1).W))
+    val result = Output(SInt((numberLength + 1).W))
   })
 
-  val resultOutput = WireInit(0.U((numberLength + 1).W))
+  val resultOutput = WireInit(0.S((numberLength + 1).W))
 
   when(io.start === true.B) {
 
@@ -63,15 +63,15 @@ object AdditionAndSubtraction {
       numberLength: Int = DesignConsts.NUMBER_LENGTH
   )(
       start: Bool,
-      input1: UInt,
-      input2: UInt
-  ): UInt = {
+      input1: SInt,
+      input2: SInt
+  ): SInt = {
 
     val additionAndSubtractionModule = Module(
       new AdditionAndSubtraction(debug, isSum, numberLength)
     )
 
-    val result = Wire(UInt((numberLength + 1).W))
+    val result = Wire(SInt((numberLength + 1).W))
 
     //
     // Configure input signals

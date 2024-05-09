@@ -21,12 +21,12 @@ class AdditionBasedRegularNeuronComputation(
     //
     val start = Input(Bool())
 
-    val inputs = Input(Vec(countOfInputs, UInt(numberLength.W)))
+    val inputs = Input(Vec(countOfInputs, SInt(numberLength.W)))
 
     //
     // Output signals
     //
-    val result = Output(UInt(numberLength.W))
+    val result = Output(SInt(numberLength.W))
     val resultValid = Output(Bool())
 
   })
