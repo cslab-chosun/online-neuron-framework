@@ -1,9 +1,9 @@
-package fuzzy.components
+package neuron.components
 
 import chisel3._
 import chisel3.util._
 
-import fuzzy.utils._
+import neuron.utils._
 
 class OnlineComparator(
     debug: Boolean = DesignConsts.ENABLE_DEBUG,
@@ -27,7 +27,7 @@ class OnlineComparator(
     //
     val earlyTerminate1 = Output(Bool())
     val earlyTerminate2 = Output(Bool())
-    
+
     val maxMin = Output(UInt(1.W))
   })
 

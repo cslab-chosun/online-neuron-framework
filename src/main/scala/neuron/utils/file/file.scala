@@ -1,12 +1,13 @@
-package fuzzy.utils.file
+package neuron.utils.file
 
 import chisel3._
 import chisel3.util._
 
 import scala.io.Source
 
-/** Object to read file
-  */
+/**
+ * Object to read file
+ */
 object FileCountOfLines {
 
   def apply(fileName: String): Int = {
@@ -15,8 +16,9 @@ object FileCountOfLines {
   }
 }
 
-/** Object to read file
-  */
+/**
+ * Object to read file
+ */
 object FileRead {
 
   //

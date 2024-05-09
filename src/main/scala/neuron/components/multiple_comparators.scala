@@ -1,9 +1,9 @@
-package fuzzy.components
+package neuron.components
 
 import chisel3._
 import chisel3.util._
 
-import fuzzy.utils._
+import neuron.utils._
 
 class ResultOfMinOrMax(
     isIndexBased: Boolean = false, // by should we return index of maximum value element or the value

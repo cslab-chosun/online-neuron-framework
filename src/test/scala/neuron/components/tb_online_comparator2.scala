@@ -1,4 +1,4 @@
-package fuzzy
+package neuron
 
 import chisel3._
 import chisel3.util._
@@ -8,8 +8,8 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import scala.util.control.Breaks._
 
-import fuzzy.components._
-import fuzzy.utils._
+import neuron.components._
+import neuron.utils._
 
 class OnlineComparator2Test extends AnyFreeSpec with Matchers {
   "DUT should pass" in {

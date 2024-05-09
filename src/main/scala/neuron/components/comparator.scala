@@ -1,15 +1,14 @@
-package fuzzy.components
+package neuron.components
 
 import chisel3._
 import chisel3.util._
 
-import fuzzy.utils._
+import neuron.utils._
 
 class Comparator(
     debug: Boolean = DesignConsts.ENABLE_DEBUG,
     isMax: Boolean = true, // by default MAX Comparator
-    leastIndexFirst: Boolean =
-      true, // by deafult least index is shown first (in case of equal operands)
+    leastIndexFirst: Boolean = true, // by deafult least index is shown first (in case of equal operands)
     numberLength: Int = DesignConsts.NUMBER_LENGTH
 ) extends Module {
 
@@ -70,8 +69,7 @@ object Comparator {
   def apply(
       debug: Boolean = DesignConsts.ENABLE_DEBUG,
       isMax: Boolean = true, // by default MAX Comparator
-      leastIndexFirst: Boolean =
-        true, // by deafult least index is shown first (in case of equal operands)
+      leastIndexFirst: Boolean = true, // by deafult least index is shown first (in case of equal operands)
       numberLength: Int = DesignConsts.NUMBER_LENGTH
   )(
       start: Bool,
@@ -124,8 +122,7 @@ object Comparator {
   def apply2(
       debug: Boolean = DesignConsts.ENABLE_DEBUG,
       isMax: Boolean = true, // by default MAX Comparator
-      leastIndexFirst: Boolean =
-        true, // by deafult least index is shown first (in case of equal operands)
+      leastIndexFirst: Boolean = true, // by deafult least index is shown first (in case of equal operands)
       numberLength: Int = DesignConsts.NUMBER_LENGTH
   )(
       start: Bool,

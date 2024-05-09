@@ -1,15 +1,16 @@
-package fuzzy.utils
+package neuron.utils
 
 import chisel3._
 import chisel3.util._
 
 import chisel3.util._
 
-import fuzzy.utils.file._
+import neuron.utils.file._
 
-/** @brief
-  *   The constants for min-max tree
-  */
+/**
+ * @brief
+ *   The constants for min-max tree
+ */
 object DesignConsts {
 
   val ENABLE_DEBUG: Boolean = false // whether to enable debug or not
@@ -28,9 +29,10 @@ object DesignConsts {
   val LUT_MEM_FUNCTION_DELTA: Int = 5
 }
 
-/** @brief
-  *   The testing samples
-  */
+/**
+ * @brief
+ *   The testing samples
+ */
 object TestingSample {
 
   //
@@ -42,9 +44,10 @@ object TestingSample {
   val comparator_test_len = comparator_test1.replace(" ", "").length
 }
 
-/** @brief
-  *   The testing samples for state generator
-  */
+/**
+ * @brief
+ *   The testing samples for state generator
+ */
 object StateGenSamples {
 
   //
