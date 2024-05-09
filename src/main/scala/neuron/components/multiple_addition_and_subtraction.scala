@@ -96,11 +96,11 @@ class MultipleAdditionSubtraction(
     //
     // Output signals
     //
-    val result = Output(SInt((numberLength + log2Ceil(countOfInputs)).W))
+    val result = Output(SInt((2 * numberLength + log2Ceil(countOfInputs)).W))
     val resultValid = Output(Bool())
   })
 
-  val resultOutput = WireInit(0.S((numberLength + log2Ceil(countOfInputs)).W))
+  val resultOutput = WireInit(0.S((2 * numberLength + log2Ceil(countOfInputs)).W))
 
   var layerCompute = ReductionLayerCompute.Compute(debug)(countOfInputs)
 
@@ -110,7 +110,7 @@ class MultipleAdditionSubtraction(
   val regResultVec = Reg(
     Vec(
       layerCompute._1,
-      new ResultOfAdditionSubtraction(numberLength + log2Ceil(countOfInputs))
+      new ResultOfAdditionSubtraction(2 * numberLength + log2Ceil(countOfInputs))
     )
   )
 
@@ -146,9 +146,18 @@ class MultipleAdditionSubtraction(
         //
         // Connect inputs
         //
-        regResultVec(i).additionSubtractionResult := AdditionAndSubtraction(
+        //  regResultVec(i).additionSubtractionResult := AdditionAndSubtraction(
+        //    debug,
+        //    isSum,
+        //    numberLength
+        //  )(
+        //    io.start,
+        //    io.inputs(i * 2),
+        //    io.inputs(i * 2 + 1)
+        //  )
+        regResultVec(i).additionSubtractionResult := MultiplicationAndDivision(
           debug,
-          isSum,
+          true, // it's MUL
           numberLength
         )(
           io.start,
@@ -246,7 +255,7 @@ object MultipleAdditionSubtraction {
       )
     )
 
-    val result = Wire(SInt((numberLength + log2Ceil(countOfInputs)).W))
+    val result = Wire(SInt((2 * numberLength + log2Ceil(countOfInputs)).W))
     val resultValid = Wire(Bool())
 
     //

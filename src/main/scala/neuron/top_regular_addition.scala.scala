@@ -26,7 +26,7 @@ class AdditionBasedRegularNeuronComputation(
     //
     // Output signals
     //
-    val result = Output(SInt(numberLength.W))
+    val result = Output(SInt((2 * numberLength + log2Ceil(countOfInputs)).W))
     val resultValid = Output(Bool())
 
   })

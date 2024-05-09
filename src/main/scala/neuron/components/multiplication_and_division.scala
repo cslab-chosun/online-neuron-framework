@@ -24,10 +24,10 @@ class MultiplicationAndDivision(
     //
     // Output signals
     //
-    val result = Output(SInt((numberLength + 1).W))
+    val result = Output(SInt((2 * numberLength).W))
   })
 
-  val resultOutput = WireInit(0.S((numberLength + 1).W))
+  val resultOutput = WireInit(0.S((2 * numberLength).W))
 
   when(io.start === true.B) {
 
@@ -71,7 +71,7 @@ object MultiplicationAndDivision {
       new MultiplicationAndDivision(debug, isMultiplication, numberLength)
     )
 
-    val result = Wire(SInt((numberLength + 1).W))
+    val result = Wire(SInt((2 * numberLength).W))
 
     //
     // Configure input signals

@@ -83,7 +83,7 @@ async def AdditionBasedRegularNeuronComputation_test(dut):
     #
     # Assert initial output is unknown
     #
-    assert LogicArray(dut.io_result.value) == LogicArray("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+    assert LogicArray(dut.io_result.value) == LogicArray("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     assert LogicArray(dut.io_resultValid.value) == LogicArray("X")
 
     #
