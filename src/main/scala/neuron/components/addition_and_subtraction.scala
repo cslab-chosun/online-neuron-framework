@@ -76,15 +76,15 @@ object AdditionAndSubtraction {
     //
     // Configure input signals
     //
-    comparatorModule.io.in1 := input1
-    comparatorModule.io.in2 := input2
+    additionAndSubtractionModule.io.in1 := input1
+    additionAndSubtractionModule.io.in2 := input2
 
-    comparatorModule.io.start := start
+    additionAndSubtractionModule.io.start := start
 
     //
     // Configure output signals
     //
-    result := comparatorModule.io.result
+    result := additionAndSubtractionModule.io.result
 
     result
   }
