@@ -77,8 +77,8 @@ from cocotb.types import LogicArray
 '''
 
 @cocotb.test()
-async def RegularNeuronComputation_test(dut):
-    """Test Regular Neuron Computation"""
+async def ComparatorBasedRegularNeuronComputation_test(dut):
+    """Test Regular Neuron Computation Based on Comparators"""
 
     #
     # Assert initial output is unknown

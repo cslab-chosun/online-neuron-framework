@@ -93,8 +93,8 @@ def get_nth_bit(number, n):
     return (number >> n) & 1
 
 @cocotb.test()
-async def OnlineNeuronComputation_test(dut):
-    """Test Online Neuron Computation"""
+async def ComparatorBasedOnlineNeuronComputation_test(dut):
+    """Test Online Neuron Computation Based on Comparators"""
 
     global number_of_bits
 

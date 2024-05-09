@@ -9,7 +9,7 @@ import _root_.circt.stage.ChiselStage
 import neuron.components._
 import neuron.utils._
 
-class OnlineNeuronComputation(
+class ComparatorBasedRegularNeuronComputation(
     debug: Boolean = DesignConsts.ENABLE_DEBUG,
     isMax: Boolean = true, // by default MAX Comparator
     isIndexBased: Boolean = false, // by should we return index of maximum value element or the value
@@ -26,22 +26,22 @@ class OnlineNeuronComputation(
     //
     val start = Input(Bool())
 
-    val inputs = Input(Vec(countOfInputs, UInt(1.W)))
+    val inputs = Input(Vec(countOfInputs, UInt(numberLength.W)))
 
     //
     // Output signals
     //
-    val result = Output(UInt(1.W))
-    val resultValid = Output(Bool())
+    val result = Output(UInt(numberLength.W))
 
   })
 
-  val (outResult, outResultValid) =
-    OnlineMultipleComparator(
+  val outResult =
+    MultipleComparator(
       debug,
       isMax,
       isIndexBased,
       leastIndexFirst,
+      numberLength,
       countOfInputs,
       maximumNumberOfIndex
     )(
@@ -50,37 +50,36 @@ class OnlineNeuronComputation(
     )
 
   //
-  // Connect output pins
+  // Connect output pin
   //
   io.result := outResult
-  io.resultValid := outResultValid
 
 }
 
 //-----------------------------------------------
 
-object MainOnlineCircuitGenerator extends App {
+object MainComparatorBasedRegularCircuitGenerator extends App {
 
   //
   // Generate verilog files
   //
   println(
     ChiselStage.emitSystemVerilog(
-      new OnlineNeuronComputation(
+      new ComparatorBasedRegularNeuronComputation(
         true, // debug
         true, // isMax
         false, // isIndexBased
         true, // leastIndexFirst
-        64, // numberLength
+        32, // numberLength
         64, // countOfInputs
-        5 // maximumNumberOfIndex (not used)
+        10 // maximumNumberOfIndex (not used)
       ),
       firtoolOpts = Array(
         "-disable-all-randomization",
         // "-strip-debug-info",
         "--split-verilog", // The intention for this argument (and next argument) is to separate generated files.
         "-o",
-        "generated/online/"
+        "generated/regular/comparator/"
       )
     )
   )
