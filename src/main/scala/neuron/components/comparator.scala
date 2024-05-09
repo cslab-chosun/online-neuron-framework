@@ -142,7 +142,7 @@ object Comparator {
     val maxMinOutput = Wire(UInt(1.W))
 
     //
-    // Configure the input signals
+    // Configure input signals
     //
     comparatorModule.io.in1 := input1
     comparatorModule.io.in2 := input2
@@ -158,6 +158,9 @@ object Comparator {
       )
     }
 
+    //
+    // Configure output signals
+    //
     maxMinOutput := comparatorModule.io.maxMin
 
     //
