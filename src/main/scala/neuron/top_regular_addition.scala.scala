@@ -32,7 +32,7 @@ class AdditionBasedRegularNeuronComputation(
   })
 
   val (result, resultValid) =
-    MultipleAdditionSubtraction(
+    MultipleMultiplicationAddition(
       debug,
       true, // isSum
       numberLength,

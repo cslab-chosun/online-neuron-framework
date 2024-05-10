@@ -5,11 +5,11 @@ import chisel3.util._
 
 import neuron.utils._
 
-class ResultOfAdditionSubtraction(
+class ResultOfMultiplicationAddition(
     numberLength: Int = DesignConsts.NUMBER_LENGTH
 ) extends Bundle {
 
-  val additionSubtractionResult = SInt(numberLength.W)
+  val multiplicationAdditionionResult = SInt(numberLength.W)
 
 }
 
@@ -24,7 +24,7 @@ object ReductionLayerCompute {
     //
     var isOddNumberOfInputs: Boolean = false
     var tempRemainedInputCount: Int = countOfInputs
-    var tempAdderOrSubtractorCount: Int = 0
+    var tempMultiplicatorOrAdderCount: Int = 0
     var delayCycles: Int = 0
 
     if (countOfInputs % 2 == 1) {
@@ -39,12 +39,12 @@ object ReductionLayerCompute {
 
       if (tempRemainedInputCount % 2 == 1) {
         tempRemainedInputCount -= 1
-        tempAdderOrSubtractorCount += 1
+        tempMultiplicatorOrAdderCount += 1
         delayCycles += 1
       }
 
       tempRemainedInputCount = tempRemainedInputCount / 2
-      tempAdderOrSubtractorCount += tempRemainedInputCount
+      tempMultiplicatorOrAdderCount += tempRemainedInputCount
       delayCycles += 1
     }
 
@@ -52,23 +52,23 @@ object ReductionLayerCompute {
     // if it's odd then we should consider another comparison too
     //
     if (isOddNumberOfInputs) {
-      tempAdderOrSubtractorCount = tempAdderOrSubtractorCount + 1
+      tempMultiplicatorOrAdderCount = tempMultiplicatorOrAdderCount + 1
       delayCycles = delayCycles + 1
     }
-    LogInfo(debug)("multiple addition/subtraction | count of inputs: " + countOfInputs)
+    LogInfo(debug)("multiple multiplication/addition | count of inputs: " + countOfInputs)
     LogInfo(debug)(
-      "multiple addition/subtraction | number of needed adder/subtractor: " + tempAdderOrSubtractorCount
+      "multiple multiplication/addition | number of needed multiplication/addition: " + tempMultiplicatorOrAdderCount
     )
-    LogInfo(debug)("multiple addition/subtraction | delay cycles: " + delayCycles)
+    LogInfo(debug)("multiple multiplication/addition | delay cycles: " + delayCycles)
 
     //
-    // Return the number of needed adders/subtractor and delays
+    // Return the number of needed multiplicators/adders and delays
     //
-    (tempAdderOrSubtractorCount + 1, delayCycles, isOddNumberOfInputs)
+    (tempMultiplicatorOrAdderCount + 1, delayCycles, isOddNumberOfInputs)
   }
 }
 
-class MultipleAdditionSubtraction(
+class MultipleMultiplicationAddition(
     debug: Boolean = DesignConsts.ENABLE_DEBUG,
     isSum: Boolean = true, // by default SUM
     numberLength: Int = DesignConsts.NUMBER_LENGTH,
@@ -110,17 +110,17 @@ class MultipleAdditionSubtraction(
   val regResultVec = Reg(
     Vec(
       layerCompute._1,
-      new ResultOfAdditionSubtraction(2 * numberLength + log2Ceil(countOfInputs))
+      new ResultOfMultiplicationAddition(2 * numberLength + log2Ceil(countOfInputs))
     )
   )
 
   //
   // Set output
   //
-  resultOutput := regResultVec(layerCompute._1 - 2).additionSubtractionResult
+  resultOutput := regResultVec(layerCompute._1 - 2).multiplicationAdditionionResult
 
   LogInfo(debug)(
-    "final adder/subtractor layer (result vector index): " + (layerCompute._1 - 2)
+    "final multiplication/addition layer (result vector index): " + (layerCompute._1 - 2)
   )
 
   when(io.start) {
@@ -135,7 +135,7 @@ class MultipleAdditionSubtraction(
     }
 
     //
-    // Implementation of the multiple subtractor/adder
+    // Implementation of the multiple multiplication/addition
     //
     var temp: Int = 0
 
@@ -146,7 +146,7 @@ class MultipleAdditionSubtraction(
         //
         // Connect inputs
         //
-        //  regResultVec(i).additionSubtractionResult := AdditionAndSubtraction(
+        //  regResultVec(i).multiplicationAdditionionResult := AdditionAndSubtraction(
         //    debug,
         //    isSum,
         //    numberLength
@@ -155,7 +155,7 @@ class MultipleAdditionSubtraction(
         //    io.inputs(i * 2),
         //    io.inputs(i * 2 + 1)
         //  )
-        regResultVec(i).additionSubtractionResult := MultiplicationAndDivision(
+        regResultVec(i).multiplicationAdditionionResult := MultiplicationAndDivision(
           debug,
           true, // it's MUL
           numberLength
@@ -172,21 +172,21 @@ class MultipleAdditionSubtraction(
       } else {
 
         //
-        // *** Connect adders/subtractors ***
+        // *** Connect multiplicators/adders ***
         //
 
         if (layerCompute._3 == true && i == layerCompute._1 - 1) {
 
           //
-          // This is the last adders/subtractors with odd inputs
+          // This is the last multiplicators/adders with odd inputs
           //
-          regResultVec(i - 1).additionSubtractionResult := AdditionAndSubtraction(
+          regResultVec(i - 1).multiplicationAdditionionResult := AdditionAndSubtraction(
             debug,
             isSum,
             numberLength
           )(
             io.start,
-            regResultVec(temp - 2).additionSubtractionResult,
+            regResultVec(temp - 2).multiplicationAdditionionResult,
             io.inputs(countOfInputs - 1)
           )
 
@@ -196,14 +196,14 @@ class MultipleAdditionSubtraction(
 
         } else if (i != temp + 1) {
 
-          regResultVec(i).additionSubtractionResult := AdditionAndSubtraction(
+          regResultVec(i).multiplicationAdditionionResult := AdditionAndSubtraction(
             debug,
             isSum,
             numberLength
           )(
             io.start,
-            regResultVec(temp).additionSubtractionResult,
-            regResultVec(temp + 1).additionSubtractionResult
+            regResultVec(temp).multiplicationAdditionionResult,
+            regResultVec(temp + 1).multiplicationAdditionionResult
           )
 
           LogInfo(debug)(
@@ -219,7 +219,7 @@ class MultipleAdditionSubtraction(
   }.otherwise {
 
     //
-    // Reset the multiple adders/subtractors
+    // Reset the multiple multiplicators/adders
     //
     delayCount := 0.S
     resultOutput := 0.S
@@ -234,7 +234,7 @@ class MultipleAdditionSubtraction(
 
 }
 
-object MultipleAdditionSubtraction {
+object MultipleMultiplicationAddition {
 
   def apply(
       debug: Boolean = DesignConsts.ENABLE_DEBUG,
@@ -246,8 +246,8 @@ object MultipleAdditionSubtraction {
       inputs: Vec[SInt]
   ): (SInt, Bool) = {
 
-    val multipleAdditionSubtractionModule = Module(
-      new MultipleAdditionSubtraction(
+    val multipleMultiplicationAdditionModule = Module(
+      new MultipleMultiplicationAddition(
         debug,
         isSum,
         numberLength,
@@ -261,11 +261,11 @@ object MultipleAdditionSubtraction {
     //
     // Configure the input signals
     //
-    multipleAdditionSubtractionModule.io.start := start
-    multipleAdditionSubtractionModule.io.inputs := inputs
+    multipleMultiplicationAdditionModule.io.start := start
+    multipleMultiplicationAdditionModule.io.inputs := inputs
 
-    result := multipleAdditionSubtractionModule.io.result
-    resultValid := multipleAdditionSubtractionModule.io.resultValid
+    result := multipleMultiplicationAdditionModule.io.result
+    resultValid := multipleMultiplicationAdditionModule.io.resultValid
 
     //
     // Return the output result
