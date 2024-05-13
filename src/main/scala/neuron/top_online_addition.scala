@@ -69,6 +69,7 @@ class AdditionBasedOnlineNeuronComputation(
     }.otherwise {
       returnZero := false.B
     }
+
   }
 
   //
@@ -91,6 +92,10 @@ class AdditionBasedOnlineNeuronComputation(
 
 object MainAdditionBasedOnlineCircuitGenerator extends App {
 
+  val printAllVariations = true
+  val printInitSeed: Double = 128
+  var printCurrentVariation: Int = 0
+
   //
   // Generate verilog files
   //
@@ -109,4 +114,36 @@ object MainAdditionBasedOnlineCircuitGenerator extends App {
       )
     )
   )
+
+  // ------------------------------------------------------
+  // Generate multiple variation of circuit
+  //
+  if (printAllVariations) {
+
+    for (i <- 0 until 7) {
+
+      printCurrentVariation = (printInitSeed * math.pow(2, i)).toInt
+
+      LogInfo(true)("Generate number for: " + printCurrentVariation)
+
+      // ------------------------------------------------------
+      // Generate circuit for circuit with (printCurrentVariation) inputs
+      //
+      println(
+        ChiselStage.emitSystemVerilog(
+          new AdditionBasedOnlineNeuronComputation(
+            true, // debug
+            printCurrentVariation // countOfInputs
+          ),
+          firtoolOpts = Array(
+            "-disable-all-randomization",
+            // "-strip-debug-info",
+            "--split-verilog", // The intention for this argument (and next argument) is to separate generated files.
+            "-o",
+            s"generated/online/var/$printCurrentVariation"
+          )
+        )
+      )
+    }
+  }
 }

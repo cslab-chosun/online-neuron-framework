@@ -28,10 +28,10 @@ class ROO4_Blackbox(width: Int) extends BlackBox with HasBlackBoxInline {
     s"""module ROO4_Blackbox (
        |    input clock, reset,
        |    input xp, xn, yp, yn,
-       |    output reg zp, zn,
-       |    output reg [3:0] sum1,
-       |    output reg [3:0] sum2,
-       |    output reg [3:0] sum_total
+       |    output zp, zn,
+       |    output [3:0] sum1,
+       |    output [3:0] sum2,
+       |    output [3:0] sum_total
        |);
        |
        |// Instantiate VHDL module
