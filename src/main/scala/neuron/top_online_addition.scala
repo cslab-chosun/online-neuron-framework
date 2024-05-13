@@ -92,7 +92,7 @@ class AdditionBasedOnlineNeuronComputation(
 
 object MainAdditionBasedOnlineCircuitGenerator extends App {
 
-  val printAllVariations = true
+  val printAllVariations = false
   val printInitSeed: Double = 128
   var printCurrentVariation: Int = 0
 
@@ -110,7 +110,7 @@ object MainAdditionBasedOnlineCircuitGenerator extends App {
         // "-strip-debug-info",
         "--split-verilog", // The intention for this argument (and next argument) is to separate generated files.
         "-o",
-        "generated/online/addition/"
+        "generated/online/var/64"
       )
     )
   )

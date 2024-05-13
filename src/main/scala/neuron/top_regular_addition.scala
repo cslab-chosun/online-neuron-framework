@@ -62,7 +62,7 @@ class AdditionBasedRegularNeuronComputation(
 
 object MainAdditionBasedRegularCircuitGenerator extends App {
 
-  val printAllVariations = true
+  val printAllVariations = false
   val printInitSeed: Double = 128
   var printCurrentVariation: Int = 0
 
@@ -81,7 +81,7 @@ object MainAdditionBasedRegularCircuitGenerator extends App {
         // "-strip-debug-info",
         "--split-verilog", // The intention for this argument (and next argument) is to separate generated files.
         "-o",
-        "generated/regular/addition/"
+        "generated/regular/var/64"
       )
     )
   )
