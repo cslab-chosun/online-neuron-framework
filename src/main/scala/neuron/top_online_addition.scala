@@ -9,14 +9,9 @@ import _root_.circt.stage.ChiselStage
 import neuron.components._
 import neuron.utils._
 
-class ComparatorBasedOnlineNeuronComputation(
+class AdditionBasedOnlineNeuronComputation(
     debug: Boolean = DesignConsts.ENABLE_DEBUG,
-    isMax: Boolean = true, // by default MAX Comparator
-    isIndexBased: Boolean = false, // by should we return index of maximum value element or the value
-    leastIndexFirst: Boolean = true, // by deafult least index is shown first (in case of equal operands)
-    countOfInputs: Int = 0,
-    maximumNumberOfIndex: Int = 10 // in case if isIndexBased == TRUE
-    // (This shows the maximum number that is possible for an index to be)
+    countOfInputs: Int = 0
 ) extends Module {
   val io = IO(new Bundle {
 
@@ -30,55 +25,79 @@ class ComparatorBasedOnlineNeuronComputation(
     //
     // Output signals
     //
-    val result = Output(UInt(1.W))
+    val result = Output(UInt(2.W))
     val resultValid = Output(Bool())
 
   })
 
+  val firstDigit = RegInit(false.B)
+  val returnZero = RegInit(false.B)
+
   val (outResult, outResultValid) =
-    OnlineMultipleComparator(
+    OnlineMultipleMultiplicationAddition(
       debug,
-      isMax,
-      isIndexBased,
-      leastIndexFirst,
-      countOfInputs,
-      maximumNumberOfIndex
+      countOfInputs
     )(
       io.start,
       io.inputs
     )
 
   //
+  // Output delay registers
+  //
+  val delayedResult = RegNext(outResult)
+  val delayedResultValid = RegNext(outResultValid)
+
+  //
+  // Apply ReLU (rectified linear unit) conditions
+  //
+  when(outResultValid === true.B && firstDigit === false.B) {
+
+    firstDigit := true.B
+
+    when(outResult === 1.U) {
+      returnZero := true.B
+    }.otherwise {
+      returnZero := false.B
+    }
+
+  }
+
+  //
   // Connect output pins
   //
-  io.result := outResult
-  io.resultValid := outResultValid
+  io.resultValid := delayedResultValid
+
+  //
+  // Apply ReLU conditions
+  //
+  when(returnZero === true.B) {
+    io.result := 0.U
+  }.otherwise {
+    io.result := delayedResult
+  }
 
 }
 
 //-----------------------------------------------
 
-object MainComparatorBasedOnlineCircuitGenerator extends App {
+object MainAdditionBasedOnlineCircuitGenerator extends App {
 
   //
   // Generate verilog files
   //
   println(
     ChiselStage.emitSystemVerilog(
-      new ComparatorBasedOnlineNeuronComputation(
+      new AdditionBasedOnlineNeuronComputation(
         true, // debug
-        true, // isMax
-        false, // isIndexBased
-        true, // leastIndexFirst
-        64, // countOfInputs
-        5 // maximumNumberOfIndex (not used)
+        64 // countOfInputs
       ),
       firtoolOpts = Array(
         "-disable-all-randomization",
         // "-strip-debug-info",
         "--split-verilog", // The intention for this argument (and next argument) is to separate generated files.
         "-o",
-        "generated/online/comparator/"
+        "generated/online/addition/"
       )
     )
   )

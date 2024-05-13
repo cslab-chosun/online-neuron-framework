@@ -49,7 +49,6 @@ class OnlineMultipleMultiplicationAddition(
 
   val delayCount = RegInit(0.U(layerCompute._2.W))
   val resultValid = WireInit(false.B)
-  val regInit = RegInit(false.B)
 
   val regVecZ = RegInit(
     VecInit(
@@ -58,10 +57,6 @@ class OnlineMultipleMultiplicationAddition(
       )
     )
   )
-
-  when(regInit === false.B) {
-    regInit := true.B
-  }
 
   //////////////////////////////////////////////////////////////////
 
@@ -96,36 +91,26 @@ class OnlineMultipleMultiplicationAddition(
 
       if ((layerCompute._3 == false && countOfInputs / 2 > i) || (layerCompute._3 == true && (countOfInputs - 1) / 2 > i)) {
 
-        /*
         //
         // Connect inputs
         //
-        val (
-          resultSelectedInputFinal,
-          resultEarlyTerminate1,
-          resultEarlyTerminate2,
-          resultMaxMinOutput
-        ) = OnlineComparator2(
-          false /*debug*/,
-          isMax
+        val (zp, zn) = ROO4_Verilog(
+          4 // width
         )(
-          io.start,
-          io.inputs(i * 2),
-          io.inputs(i * 2 + 1),
-          false.B
+          io.inputs(i * 2).asBool,
+          io.inputs(i * 2 + 1).asBool,
+          false.B, // modify this
+          false.B // modify this
         )
 
         //
         // Connect the outputs
         //
-        regMinMaxResultVec(i) := resultMaxMinOutput
-        var resultEarlyTerminate = resultEarlyTerminate1 | resultEarlyTerminate2
-        regMinMaxResultETVec(i) := resultEarlyTerminate
+        regVecZ(i) := Cat(zp.asUInt, zn.asUInt)
 
         LogInfo(debug)(
-          "connecting inputs(" + (i * 2) + ") and input(" + (i * 2 + 1) + ") to regMinMaxResultVec(" + i + ")"
+          "connecting inputs(" + (i * 2) + ") and input(" + (i * 2 + 1) + ") to regVecZ(" + i + ")"
         )
-         */
 
       } else {
 
@@ -159,7 +144,7 @@ class OnlineMultipleMultiplicationAddition(
           regVecZ(i) := z
 
           LogInfo(debug)(
-            "connecting regVecZ(" + temp + ") and regVecZ(" + (temp + 1) + ") to regMinMaxResultVec(" + i + ")"
+            "connecting regVecZ(" + temp + ") and regVecZ(" + (temp + 1) + ") to regVecZ(" + i + ")"
           )
         }
 

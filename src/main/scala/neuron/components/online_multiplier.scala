@@ -86,6 +86,44 @@ class ROO4_Verilog(width: Int) extends Module {
   io.sum_total := roo4.io.sum_total
 }
 
+object ROO4_Verilog {
+
+  def apply(
+      width: Int
+  )(
+      xp: Bool,
+      xn: Bool,
+      yp: Bool,
+      yn: Bool
+  ): (Bool, Bool) = {
+
+    val rOO4_VerilogModule = Module(
+      new ROO4_Verilog(
+        width
+      )
+    )
+
+    val zp = Wire(Bool())
+    val zn = Wire(Bool())
+
+    //
+    // Configure the input signals
+    //
+    rOO4_VerilogModule.io.xp := xp
+    rOO4_VerilogModule.io.xn := xn
+    rOO4_VerilogModule.io.yp := yp
+    rOO4_VerilogModule.io.yn := yn
+
+    zp := rOO4_VerilogModule.io.zp
+    zn := rOO4_VerilogModule.io.zn
+
+    //
+    // Return the output result
+    //
+    (zp, zn)
+  }
+}
+
 object MainOnlineMultiplierGenerator extends App {
 
   //
