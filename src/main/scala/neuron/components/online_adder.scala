@@ -65,6 +65,40 @@ class OLSDA(
   io.cout := cout
 }
 
+object OLSDA {
+
+  def apply(
+      debug: Boolean = DesignConsts.ENABLE_DEBUG
+  )(
+      x: UInt,
+      cin: Bool
+  ): (UInt, Bool) = {
+
+    val oLSDAModule = Module(
+      new OLSDA(
+        debug
+      )
+    )
+
+    val z = Wire(UInt(2.W))
+    val cout = Wire(Bool())
+
+    //
+    // Configure the input signals
+    //
+    oLSDAModule.io.x := x
+    oLSDAModule.io.cin := cin
+
+    z := oLSDAModule.io.z
+    cout := oLSDAModule.io.cout
+
+    //
+    // Return the output result
+    //
+    (z, cout)
+  }
+}
+
 object MainOnlineAdderGenerator extends App {
 
   //
