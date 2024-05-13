@@ -34,7 +34,10 @@ class OnlineMultipleMultiplicationAddition(
     //
     val start = Input(Bool())
 
-    val inputs = Input(Vec(countOfInputs, UInt(1.W)))
+    val inputs_xp = Input(Vec(countOfInputs, UInt(1.W)))
+    val inputs_xn = Input(Vec(countOfInputs, UInt(1.W)))
+    val inputs_yp = Input(Vec(countOfInputs, UInt(1.W)))
+    val inputs_yn = Input(Vec(countOfInputs, UInt(1.W)))
 
     //
     // Output signals
@@ -97,10 +100,10 @@ class OnlineMultipleMultiplicationAddition(
         val (zp, zn) = ROO4_Verilog(
           4 // width
         )(
-          io.inputs(i * 2).asBool,
-          io.inputs(i * 2 + 1).asBool,
-          false.B, // modify this
-          false.B // modify this
+          io.inputs_xp(i * 2).asBool,
+          io.inputs_xn(i * 2 + 1).asBool,
+          io.inputs_yp(i * 2).asBool,
+          io.inputs_yn(i * 2 + 1).asBool
         )
 
         //
@@ -178,7 +181,10 @@ object OnlineMultipleMultiplicationAddition {
       countOfInputs: Int = 0
   )(
       start: Bool,
-      inputs: Vec[UInt]
+      inputs_xp: Vec[UInt],
+      inputs_xn: Vec[UInt],
+      inputs_yp: Vec[UInt],
+      inputs_yn: Vec[UInt]
   ): (UInt, Bool) = {
 
     val onlineMultipleMultiplicationAdditionModule = Module(
@@ -195,7 +201,11 @@ object OnlineMultipleMultiplicationAddition {
     // Configure the input signals
     //
     onlineMultipleMultiplicationAdditionModule.io.start := start
-    onlineMultipleMultiplicationAdditionModule.io.inputs := inputs
+
+    onlineMultipleMultiplicationAdditionModule.io.inputs_xp := inputs_xp
+    onlineMultipleMultiplicationAdditionModule.io.inputs_xn := inputs_xn
+    onlineMultipleMultiplicationAdditionModule.io.inputs_yp := inputs_yp
+    onlineMultipleMultiplicationAdditionModule.io.inputs_yn := inputs_yn
 
     result := onlineMultipleMultiplicationAdditionModule.io.result
     resultValid := onlineMultipleMultiplicationAdditionModule.io.resultValid

@@ -20,7 +20,10 @@ class AdditionBasedOnlineNeuronComputation(
     //
     val start = Input(Bool())
 
-    val inputs = Input(Vec(countOfInputs, UInt(1.W)))
+    val inputs_xp = Input(Vec(countOfInputs, UInt(1.W)))
+    val inputs_xn = Input(Vec(countOfInputs, UInt(1.W)))
+    val inputs_yp = Input(Vec(countOfInputs, UInt(1.W)))
+    val inputs_yn = Input(Vec(countOfInputs, UInt(1.W)))
 
     //
     // Output signals
@@ -39,7 +42,10 @@ class AdditionBasedOnlineNeuronComputation(
       countOfInputs
     )(
       io.start,
-      io.inputs
+      io.inputs_xp,
+      io.inputs_xn,
+      io.inputs_yp,
+      io.inputs_yn
     )
 
   //
@@ -48,6 +54,9 @@ class AdditionBasedOnlineNeuronComputation(
   val delayedResult = RegNext(outResult)
   val delayedResultValid = RegNext(outResultValid)
 
+  val outResultNeg = outResult(1)
+  val outResultPos = outResult(0)
+
   //
   // Apply ReLU (rectified linear unit) conditions
   //
@@ -55,12 +64,11 @@ class AdditionBasedOnlineNeuronComputation(
 
     firstDigit := true.B
 
-    when(outResult === 1.U) {
+    when(outResultNeg === outResultPos || outResultNeg === 1.U) {
       returnZero := true.B
     }.otherwise {
       returnZero := false.B
     }
-
   }
 
   //

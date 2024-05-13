@@ -61,7 +61,7 @@ class OLSDA(
   R6 := R4
   R5 := R3
 
-  io.z := Cat(R6, R5)
+  io.z := Cat(R6, R5) // R6 Neg, R5 Pos
   io.cout := cout
 }
 
