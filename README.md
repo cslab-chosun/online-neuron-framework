@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt="Online Fuzzy Controller" title="Online Fuzzy Controller" src="https://raw.githubusercontent.com/cslab-chosun/uploaded-files/main/online-neuron-framework-logo/png/logo-no-background.png" width="450">
+    <img alt="Online Neuron Framework" title="Online Neuron Framework" src="https://raw.githubusercontent.com/cslab-chosun/uploaded-files/main/online-neuron-framework-logo/png/logo-no-background.png" width="400">
 </p>
 
 <p align="center">
@@ -31,11 +31,23 @@ For generating SystemVerilog files, you need to install [Chisel](https://www.chi
 $ sbt run
 ```
 
-This command prompts you to select a component. You can select one of the following components based on your specific computation needs:
+This command prompts you to select a component. You can select one of the following components based on your specific computation needs (**conventional**/**online**):
 
 ```sh
 $ sbt run
-To be added
+[info] welcome to sbt 1.9.7 (Eclipse Adoptium Java 17.0.11)
+[info] loading settings for project online-neuron-framework-build from plugins.sbt ...
+[info] loading project definition from /home/sina/HyperDbg/online-neuron-framework/project
+[info] loading settings for project root from build.sbt ...
+[info] set current project to online-neuron-framework (in build file:/home/sina/HyperDbg/online-neuron-framework/)
+
+Multiple main classes detected. Select one to run:
+ [1] neuron.MainAdditionBasedOnlineCircuitGenerator
+ [2] neuron.MainAdditionBasedRegularCircuitGenerator
+ [3] neuron.MainComparatorBasedOnlineCircuitGenerator
+ [4] neuron.MainComparatorBasedRegularCircuitGenerator
+ [5] neuron.components.MainOnlineAdderGenerator
+ [6] neuron.components.MainOnlineMultiplierGenerator
 ```
 
 The generated code for either online or conventional arithmetic can be found in the `generated` directory.
