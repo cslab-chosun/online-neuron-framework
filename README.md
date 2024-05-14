@@ -37,9 +37,9 @@ This command prompts you to select a component. You can select one of the follow
 $ sbt run
 [info] welcome to sbt 1.9.7 (Eclipse Adoptium Java 17.0.11)
 [info] loading settings for project online-neuron-framework-build from plugins.sbt ...
-[info] loading project definition from /home/sina/HyperDbg/online-neuron-framework/project
+[info] loading project definition from /home/online-neuron-framework/project
 [info] loading settings for project root from build.sbt ...
-[info] set current project to online-neuron-framework (in build file:/home/sina/HyperDbg/online-neuron-framework/)
+[info] set current project to online-neuron-framework (in build file:/home/online-neuron-framework/)
 
 Multiple main classes detected. Select one to run:
  [1] neuron.MainAdditionBasedOnlineCircuitGenerator
