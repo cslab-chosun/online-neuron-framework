@@ -8,7 +8,7 @@
 
 ## Introduction
 
-This repository contains source code used for comparing high-level results corresponding to Conventional (CA) and Online (OA) arithmetic methodologies across different input sizes. The comparison is based on Directed Acyclic Graphs (DFGs) derived from dense layers of Deep Neural Networks (DNNs) such as AlexNet and VGG.
+This repository contains source code used for comparing high-level results corresponding to Conventional (CA) and Online (OA) arithmetic methodologies across different input sizes. The comparison is based on Data Flow Graphs (DFGs) derived from dense layers of Deep Neural Networks (DNNs) such as AlexNet and VGG.
 
 <p align="center">
   <img alt="" title=""  src="https://raw.githubusercontent.com/cslab-chosun/uploaded-files/main/img/neuron-1.png" width=40%><img alt="" title=""  src="https://raw.githubusercontent.com/cslab-chosun/uploaded-files/main/img/fsmr-1.png" width=40%>
