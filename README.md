@@ -14,6 +14,23 @@ This repository contains source code used for comparing high-level results corre
   <img alt="" title=""  src="https://raw.githubusercontent.com/cslab-chosun/uploaded-files/main/img/neuron-1.png" width=40%><img alt="" title=""  src="https://raw.githubusercontent.com/cslab-chosun/uploaded-files/main/img/fsmr-1.png" width=40%>
 </p>
 
+## Publication
+
+In case you use our framework in your work, please consider citing our paper.
+
+* **[Hardware Design Space Exploration in High-Level Synthesis Backend Featuring Online Arithmetic](https://ieeexplore.ieee.org/document/10737716)**
+
+```
+@inproceedings{gorgin2024hardware,
+  title={Hardware Design Space Exploration in High-Level Synthesis Backend Featuring Online Arithmetic},
+  author={Gorgin, Saeid and Fallah, Mohammad K and Karvandi, Mohammad Sina and Lee, Jeong-A},
+  booktitle={2024 IEEE 37th International System-on-Chip Conference (SOCC)},
+  pages={1--6},
+  year={2024},
+  organization={IEEE}
+}
+```
+
 ## Methodology
 DFGs are utilized to represent neurons with varying numbers of inputs: 32, 64, 128, 256, 512, 1024, 2048, and 4096. Each neuron computation involves a dot product operation followed by a Rectified Linear Unit (ReLU) activation function.
 
